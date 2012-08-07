@@ -30,12 +30,20 @@ function ci_env_run_err {
 
 function run_cucumber_profile_with_rerun {
   rm -f tmp/rerun.txt
-  ci_env_run "bundler_stubs/cucumber features -p $1 --format rerun --out tmp/rerun.txt --format html --out=tmp/reports/cucumber_$1.html"
+  ci_env_run "bundler_stubs/cucumber features -p $1 --format rerun --out tmp/rerun.txt --format html --out=$(ci_reports_dir)/cucumber_$1.html"
   if [ ! $? -eq 0 ]; then
     printf "~> Some features failed. Trying them again:\n"
     cat tmp/rerun.txt
     printf "\n"
 
-    ci_env_run_err "bundler_stubs/cucumber @tmp/rerun.txt -p $1 --format html --out=tmp/reports/cucumber_$1_rerun.html"
+    ci_env_run_err "bundler_stubs/cucumber @tmp/rerun.txt -p $1 --format html --out=$(ci_reports_dir)/cucumber_$1_rerun.html"
   fi
+}
+
+function ci_build_dir {
+  echo "$JENKINS_HOME/jobs/$JOB_NAME/builds"
+}
+
+function ci_reports_dir {
+  echo "$(ci_build_dir)/reports"
 }
