@@ -1,5 +1,17 @@
 #!/bin/bash
 
+function init_rvm {
+  if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
+    source "$HOME/.rvm/scripts/rvm"
+  elif [[ -s "/usr/local/rvm/scripts/rvm" ]] ; then
+    source "/usr/local/rvm/scripts/rvm"
+  else
+    printf "ERROR: An RVM installation was not found.\n"
+  fi
+
+  rvm use $CI_RUBY --create
+}
+
 function ci_env_run {
   RAILS_ENV=test $1
 }
