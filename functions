@@ -45,5 +45,5 @@ function ci_build_dir {
 }
 
 function ci_reports_dir {
-  echo "$(ci_build_dir)/reports"
+  echo "$(ci_build_dir)/reports/$BUILD_ID"
 }
