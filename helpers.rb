@@ -38,6 +38,8 @@ module CI
     end
 
     def setup_environment!
+      test_config = "#{rails_root}/config/environments/test.rb"
+      env_config  = "#{rails_root}/config/environments/#{ci_env}.rb"
       FileUtils.ln_s(test_config, env_config) unless 'test' == ci_env
     end
 
