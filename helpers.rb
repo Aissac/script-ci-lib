@@ -25,6 +25,10 @@ module CI
       def render
         @erb.result(binding)
       end
+
+      def to_s
+        render
+      end
     end
 
     def initialize(rails_root, ci_env)
