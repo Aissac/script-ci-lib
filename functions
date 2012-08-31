@@ -13,6 +13,7 @@ function init_rvm {
 }
 
 function ci_env_run {
+  echo "~> running '$1'"
   RAILS_ENV=$CI_ENV $1
 }
 
