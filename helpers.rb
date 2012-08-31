@@ -8,7 +8,11 @@ module CI
   class ConfigHelper
     attr_reader :rails_root, :ci_env
 
-    def self.setup!(rails_root, ci_env)
+    DEFAULT_CONFIG_PATHS = %W[
+      config/environments/test.rb
+    ]
+
+    def self.setup!(rails_root, config_paths=DEFAULT_CONFIG_PATHS)
       new(rails_root, ci_env).setup!
     end
 
@@ -31,11 +35,7 @@ module CI
       end
     end
 
-    DEFAULT_CONFIG_PATHS = %W[
-      config/environments/test.rb
-    ]
-
-    def initialize(rails_root, ci_env, config_paths=DEFAULT_CONFIG_PATHS)
+    def initialize(rails_root, ci_env, config_paths)
       @rails_root = rails_root
       @ci_env = ci_env
       @config_paths = config_paths
@@ -48,7 +48,7 @@ module CI
 
     def setup_environment!
       return if 'test' == ci_env
-      
+
       @config_paths.each do |path|
         test_config = File.join(rails_root, path)
         env_config = destination_config_path(path)
