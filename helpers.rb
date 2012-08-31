@@ -12,8 +12,8 @@ module CI
       config/environments/test.rb
     ]
 
-    def self.setup!(rails_root, config_paths=DEFAULT_CONFIG_PATHS)
-      new(rails_root, ci_env).setup!
+    def self.setup!(rails_root, ci_env, config_paths=DEFAULT_CONFIG_PATHS)
+      new(rails_root, ci_env, config_paths).setup!
     end
 
     class ConfigTemplate
