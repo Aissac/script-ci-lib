@@ -48,3 +48,12 @@ function ci_build_dir {
 function ci_reports_dir {
   echo "tmp/reports"
 }
+
+function ci_env_hash {
+  if [ -z "$CI_ENV" ] ; then
+    CI_ENV="test"
+  else
+    CI_ENV=$(echo $CI_ENV | md5sum | awk '{print $1}')
+  fi
+  echo $CI_ENV
+}
