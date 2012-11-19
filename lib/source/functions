@@ -14,7 +14,12 @@ function init_rvm {
 
 function ci_env_run {
   echo "~> running '$1'"
+  T="$(date +%s)"
   RUBY_HEAP_MIN_SLOTS=1000000 RUBY_HEAP_SLOTS_INCREMENT=1000000 RUBY_HEAP_SLOTS_GROWTH_FACTOR=1 RUBY_GC_MALLOC_LIMIT=100000000 RUBY_HEAP_FREE_MIN=50000 RUBY_FREE_MIN=50000 RAILS_ENV=$CI_ENV $1
+  exit_value=$?
+  T="$(($(date +%s)-T))"
+  echo "~> Time: ${T} seconds ($1)"
+  return $exit_value
 }
 
 function exit_on_error {
@@ -30,14 +35,31 @@ function ci_env_run_err {
 }
 
 function run_cucumber_profile_with_rerun {
-  rm -f tmp/rerun.txt
+  RERUN_TXT=tmp/rerun.txt
+  rm -f $RERUN_TXT
   ci_env_run "bundler_stubs/cucumber features -p $1 --format rerun --out tmp/rerun.txt --format html --out=$(ci_reports_dir)/cucumber_$1.html --format junit --out=$(ci_reports_dir)/features-$1"
   if [ ! $? -eq 0 ]; then
     printf "~> Some features failed. Trying them again:\n"
-    cat tmp/rerun.txt
+    cat $RERUN_TXT
     printf "\n"
 
-    ci_env_run_err "bundler_stubs/cucumber @tmp/rerun.txt -p $1 --format html --out=$(ci_reports_dir)/cucumber_rerun_$1.html --format junit --out=$(ci_reports_dir)/features-$1"
+    ci_env_run_err "bundler_stubs/cucumber @$RERUN_TXT -p $1 --format html --out=$(ci_reports_dir)/cucumber_rerun_$1.html --format junit --out=$(ci_reports_dir)/features-$1"
+  fi
+}
+
+function run_parallel_cucumber_with_rerun {
+  RERUN_TXT=tmp/rerun.txt
+  rm -f $RERUN_TXT
+  ci_env_run "bundler_stubs/parallel_cucumber features -n $CONCURRENCY -o '-p $1 --format rerun --out $(ci_reports_dir)/rerun_\\\$TEST_ENV_NUMBER.txt --format progress --format html --out $(ci_reports_dir)/cucumber_$1_\\\$TEST_ENV_NUMBER.html --format junit --out $(ci_reports_dir)'"
+  if [ ! $? -eq 0 ]; then
+    printf "~> Some features failed. Trying them again:\n"
+
+    # Join all reruns into one file
+    find $(ci_reports_dir) -type f -iname 'rerun_*.txt' -exec cat {} \; -exec echo " " \; > $RERUN_TXT
+
+    printf "\n"
+
+    ci_env_run_err "bundler_stubs/cucumber @$RERUN_TXT -p $1 --format html --out $(ci_reports_dir)/cucumber_$1_rerun.html --format junit --out $(ci_reports_dir)"
   fi
 }
 
@@ -56,4 +78,9 @@ function ci_env_hash {
     CI_ENV=$(echo $CI_ENV | md5sum | awk '{print $1}')
   fi
   echo $CI_ENV
+}
+
+function setup_ci_vars {
+  export JENKINS_HOME=${JENKINS_HOME:-"tmp"}
+  export CI_ENV=$(ci_env_hash)
 }
