@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'methadone'
+require 'script-ci-lib'
+
+class App
+  include Methadone::Main
+  include Methadone::CLILogging
+  include Methadone::SH
+
+  main do |script_dir|
+    destination_root = Pathname.new(script_dir)
+    destination_lib = destination_root.join('ci/lib')
+
+    exit_now!(1, "#{destination_root} is not a directory") unless destination_root.directory?
+
+    info "setting up in #{destination_root}"
+
+    source_dir = File.expand_path(File.dirname(__FILE__) + '/../lib/source')
+
+    destination_lib.mkpath
+
+    Dir["#{source_dir}/*"].each do |file|
+      destination = destination_lib.join(File.basename(file))
+      info "=> #{destination}"
+
+      sh! "cp -p #{file} #{destination}"
+    end
+    
+    
+  end
+
+  on '--setup', 'Setup CI script libs'
+  arg :script_dir, 'Where to put the CI lib files'
+
+  version ScriptCiLib::VERSION
+  use_log_level_option
+
+  go!
+end
