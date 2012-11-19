@@ -30,8 +30,7 @@ class App
     
     
   end
-
-  on '--setup', 'Setup CI script libs'
+  
   arg :script_dir, 'Where to put the CI lib files'
 
   version ScriptCiLib::VERSION

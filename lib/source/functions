@@ -67,6 +67,10 @@ function run_parallel_rspec {
   ci_env_run_err "bundler_stubs/parallel_rspec spec -n $CONCURRENCY -o '--format progress --format html --out $(ci_reports_dir)/rspec\\\$TEST_ENV_NUMBER.html --format JUnitFormatter --out $(ci_reports_dir)/rspec\\\$TEST_ENV_NUMBER.xml'"
 }
 
+function run_parallel_rspec_v1 {
+  ci_env_run_err "bundler_stubs/parallel_rspec spec -n $CONCURRENCY -o '--format progress --format html:$(ci_reports_dir)/rspec\\\$TEST_ENV_NUMBER.html'"
+}
+
 function ci_build_dir {
   echo "$JENKINS_HOME/jobs/$JOB_NAME/builds"
 }
