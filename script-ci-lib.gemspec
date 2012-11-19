@@ -7,9 +7,9 @@ Gem::Specification.new do |gem|
   gem.name          = "script-ci-lib"
   gem.version       = ScriptCiLib::VERSION
   gem.authors       = ["Istvan Hoka"]
-  gem.email         = ["istvan.hoka@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.email         = ["istvan@2xwide.com"]
+  gem.description   = %q{CI library scripts}
+  gem.summary       = %q{Bootstrap your Rails project with CI scripts to run on Jenkins}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
