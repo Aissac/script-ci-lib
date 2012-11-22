@@ -34,6 +34,10 @@ function ci_env_run_err {
   exit_on_error "$1"
 }
 
+function ci_env_rake {
+  ci_env_run_err "bundler_stubs/rake $1"
+}
+
 function run_cucumber_profile_with_rerun {
   RERUN_TXT=tmp/rerun.txt
   rm -f $RERUN_TXT
