@@ -52,7 +52,7 @@ module CI
       @config_paths.each do |path|
         test_config = File.join(rails_root, path)
         env_config = destination_config_path(path)
-        FileUtils.ln_s(test_config, env_config) 
+        FileUtils.ln_sf(test_config, env_config) 
       end
       
     end

@@ -27,8 +27,6 @@ class App
 
       sh! "cp -p #{file} #{destination}"
     end
-    
-    
   end
   
   arg :script_dir, 'Where to put the CI lib files'
