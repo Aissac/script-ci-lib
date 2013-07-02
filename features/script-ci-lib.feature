@@ -10,3 +10,10 @@ Feature: My bootstrapped app kinda works
     And the banner should document that this app takes options
     And the following options should be documented:
       |--version|
+
+  Scenario: App creates the desired files
+    Given the directory "ci/lib" does not exist
+    When I run `script-ci-lib .`
+    Then the following files should exist:
+      |ci/lib/functions                 |
+      |ci/lib/helpers.rb                |
