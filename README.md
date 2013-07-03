@@ -1,6 +1,8 @@
 # Script::Ci::Lib
 
-TODO: Write a gem description
+[![Build Status](https://travis-ci.org/doublewide/script-ci-lib.png)](https://travis-ci.org/doublewide/script-ci-lib)
+
+Library for common Jenkins CI scripts. Extracted from Doublewide projects.
 
 ## Installation
 
@@ -18,7 +20,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+`script-ci-lib <destination>`
+
+This will install CI scripts into `<destination>/ci/lib`.
 
 ## Contributing
 
