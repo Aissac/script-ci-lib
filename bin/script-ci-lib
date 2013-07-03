@@ -3,6 +3,7 @@
 require 'optparse'
 require 'methadone'
 require 'script-ci-lib'
+require 'pathname'
 
 class App
   include Methadone::Main
