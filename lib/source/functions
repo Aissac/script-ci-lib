@@ -12,6 +12,26 @@ function init_rvm {
   rvm use $CI_RUBY --create
 }
 
+function engine_run {
+  echo "~> Scoping to engine: $1"
+
+  reports_root="$(absolute_path $(ci_reports_dir))/$1"
+
+  pushd "engines/$1"
+
+  CI_REPORTS_ROOT=$reports_root $2
+  exit_value=$?
+
+  popd
+  
+  return $exit_value
+}
+
+function engine_run_err {
+  engine_run "$1" "$2"
+  exit_on_error "$1"
+}
+
 function ci_env_run {
   echo "~> running '$1'"
   T="$(date +%s)"
@@ -80,7 +100,7 @@ function ci_build_dir {
 }
 
 function ci_reports_dir {
-  echo "tmp/reports"
+  echo ${CI_REPORTS_ROOT:-"tmp/reports"}
 }
 
 function ci_env_hash {
@@ -96,4 +116,12 @@ function setup_ci_vars {
   export JENKINS_HOME=${JENKINS_HOME:-"tmp"}
   export CI_ENV=$(ci_env_hash)
   export CONCURRENCY=${CONCURRENCY:-"4"}
+  export CI_ENV=$(ci_env_hash)
+}
+
+function absolute_path {
+  pushd $1 > /dev/null
+  abs_path=$(pwd)
+  popd > /dev/null
+  echo $abs_path
 }
