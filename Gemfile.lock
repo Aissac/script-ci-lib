@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    script-ci-lib (0.0.5)
+    script-ci-lib (0.0.6)
       methadone (~> 1.2.2)
 
 GEM

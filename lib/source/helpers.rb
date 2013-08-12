@@ -61,9 +61,13 @@ module CI
       find_config_templates.each do |template|
         result = ConfigTemplate.new(template, config_template_options)
 
-        File.open(destination_config(template), 'w') do |f|
+        file_name = destination_config(template)
+        File.open(file_name, 'w') do |f|
           f.write(result)
         end
+
+        puts "~> Generated: #{file_name}"
+        puts result
       end
     end
 
